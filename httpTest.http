@@ -1,0 +1,12 @@
+GET http://127.0.0.1:8000/articles HTTP/1.1
+###
+POST http://127.0.0.1:8000/articles HTTP/1.1    
+###
+GET http://127.0.0.1:8000/articles/create HTTP/1.1    
+###
+PUT http://127.0.0.1:8000/articles/1988 HTTP/1.1    
+###
+PATCH http://127.0.0.1:8000/articles/1988 HTTP/1.1    
+###
+DELETE http://127.0.0.1:8000/articles/1988 HTTP/1.1    
+###
