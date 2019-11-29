@@ -71,10 +71,11 @@ Route::get('tags/{slug}/articles', [ //{{slug}}값에 들어온 것은 index메�
 ]);
 
 //드롭존 라이브러리의 파일 업로드 요청을 받을 별도의 라우트
-Route::resource('attachments', 'AttachmentsController', ['only' => ['store', 'destory']]);
+Route::resource('attachments', 'AttachmentsController', ['only' => ['store', 'destroy']]);
+Route::get('attachments/{file}', 'AttachmentsController@show');
 
 //댓글
-Route::resource('comments', 'CommentsController', ['only' => ['update', 'destory']]);
+Route::resource('comments', 'CommentsController', ['only' => ['update', 'destroy']]);
 Route::resource('articles.comments', 'CommentsController', ['only' => 'store']);
 
 

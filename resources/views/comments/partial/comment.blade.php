@@ -54,14 +54,29 @@
     </div>
 
 
+    <!-- <script>
+  if($currentUser)
+      $('.btn__reply__comment').on('click', function(e){
+        $.ajax({
+          type: 'POST',
+          url: 
+        })
+        include('comments.partial.create', ['parentId' => $comment->id])
+      })
+  </script> -->
+
+    <!-- 댓글 작성 -->  
     @if($currentUser)
       @include('comments.partial.create', ['parentId' => $comment->id])
     @endif
 
+    <!-- 댓글 수정 -->
     @can('update', $comment)
       @include('comments.partial.edit')
     @endcan
 
+
+    <!-- 댓글 출력 -->
     @forelse ($comment->replies as $reply)
       @include('comments.partial.comment', [
         'comment' => $reply,

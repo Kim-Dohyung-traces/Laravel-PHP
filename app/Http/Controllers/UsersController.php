@@ -30,7 +30,7 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|max:255',
+            'name' => 'custom[hi]|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
@@ -44,15 +44,7 @@ class UsersController extends Controller
             'confirm_code' => $confirmCode,
         ]);
         event(new \App\Events\UserCreated($user));
-        //        \Mail::send(
-        //            'emails.auth.confirm',
-        //            compact('user'),
-        //            function ($message) use ($user) {
-        //                $message->to($user->email); $message->subject(
-        //                    sprintf('[%s] 회원 가입을 확인해주세요.', config('app.name'))
-        //                );
-        //            }
-        //        );
+
         return $this->respondCreated(
             '가입하신 메일 계정으로 가입 확인 메일을 보내드렸습니다. 가입 확인하시고 로그인해 주세요.'
         );
@@ -63,6 +55,9 @@ class UsersController extends Controller
      * @param string $code
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
+
+
+    //회원가입을 메일에서 확인
     public function confirm($code)
     {
         $user = \App\User::whereConfirmCode($code)->first();

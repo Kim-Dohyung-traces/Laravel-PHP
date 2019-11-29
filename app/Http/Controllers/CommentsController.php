@@ -20,7 +20,6 @@ class CommentsController extends Controller
      */
     public function store(\App\Http\Requests\CommentsRequest $request, \App\Article $article)
     {   
-        error_log("a");
         $comment = $article->comments()->create(array_merge(
             $request->all(),
             ['user_id' => $request->user()->id]
@@ -38,7 +37,7 @@ class CommentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(\App\Http\Requests\CommentsRequest $request, \App\Comment $comment)
-    {
+    {        
         $comment->update($request->all());
         flash()->success('작성하신 댓글을 수정했습니다.');
         return redirect(

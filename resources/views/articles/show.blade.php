@@ -28,7 +28,7 @@
         <div>
             <p>{!! $article->content !!}</p>
         </div>
-        @include('tags.partial.list', ['tags' => $article->tags])
+        <!-- @include('tags.partial.list', ['tags' => $article->tags]) -->
         </article>
 
         <div class="text-center action__article">

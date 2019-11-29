@@ -1,4 +1,4 @@
-<div class="media media__edit__comment">
+<div style="display:none" class="media media__edit__comment">
   <div class="media-body">
     <form method="POST" action="{{ route('comments.update', $comment->id) }}" class="form-horizontal">
       {!! csrf_field() !!}

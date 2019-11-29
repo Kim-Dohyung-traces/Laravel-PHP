@@ -8,8 +8,8 @@ class Tag extends Model
 {
     protected $fillable = ['name', 'slug'];
 
-    public function articles()
-    {
+    //한 태그는 많은 게시판을 가질 수 있다
+    public function articles() {
         return $this->belongsToMany(Article::class);
     }
 }

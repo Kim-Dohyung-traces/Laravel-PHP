@@ -38,8 +38,8 @@
             "App\\": "app/"
         },
         "classmap": [
-            "database/seeds",
-            "database/factories"
+            "database",
+            "database"
         ],
         "files": [
             "app/helpers.php"

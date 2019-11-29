@@ -20,7 +20,7 @@ class CreateAttachmentsTable extends Migration
             $table->unsignedBigInteger('bytes')->nullable();
             $table->string('mime')->nullable();
             $table->timestamps();
-            //            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
+            // $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
         });
     }
     /**

@@ -13,7 +13,7 @@
     </h4>
 </div>
 
-<form action="{{ route('articles.update', $article->id) }}" method="POST">
+<form action="{{ route('articles.update', $article->id) }}" method="PUT">
     {!! csrf_field() !!}
     {!! method_field('PUT') !!}
 

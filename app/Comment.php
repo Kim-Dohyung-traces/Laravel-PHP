@@ -24,7 +24,8 @@ class Comment extends Model
         'user_id',
         'commentable_type',
         'commentable_id',
-        'parent_id',
+        'parent_id'
+        ,
     ];
     /**
      * The relations to eager load on every query.
@@ -64,6 +65,10 @@ class Comment extends Model
     public function votes() {
         return $this->hasMany(Vote::class);
     }
+
+
+
+    
     /* Accessors */
     public function getUpCountAttribute()
     {

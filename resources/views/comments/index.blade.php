@@ -25,6 +25,8 @@
 @section('script')
   @parent
   <script>
+  
+    //댓글 삭제
     $('.btn__delete__comment').on('click', function(e) {
       var commentId = $(this).closest('.item__comment').data('id'),
         articleId = $('article').data('id');
@@ -33,11 +35,12 @@
           type: 'DELETE',
           url: "/comments/" + commentId,
         }).then(function() {
-          window.location.href = '/articles';
+          window.location.href = '/articles/'+ articleId;
         });
       }
     });
-    // 대댓글 폼을 토글
+    
+    // 대 댓글 폼을 토글
     $('.btn__reply__comment').on('click', function(e) {
       var el__create = $(this).closest('.item__comment').find('.media__create__comment').first(),
         el__edit = $(this).closest('.item__comment').find('.media__edit__comment').first();
@@ -49,10 +52,10 @@
     $('.btn__edit__comment').on('click', function(e) {
       var el__create = $(this).closest('.item__comment').find('.media__create__comment').first(),
         el__edit = $(this).closest('.item__comment').find('.media__edit__comment').first();
-      el__create.hide('fast');
+      el__create.hide('fast'); // 답글쓰기의 전송하기 숨김
       el__edit.toggle('fast').end().find('textarea').first().focus();
     });
-    // Send save a vote request to the server
+    //좋아요 투표
     $('.btn__vote__comment').on('click', function(e) {
       var self = $(this),
         commentId = self.closest('.item__comment').data('id');

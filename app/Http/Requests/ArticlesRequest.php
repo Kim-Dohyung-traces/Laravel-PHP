@@ -28,8 +28,8 @@ class ArticlesRequest extends FormRequest
         $mimes = implode(',', config('project.mimes'));
         return [
             'title' => ['required'],
-            'content' => ['required', 'min:10'],
             'tags' => ['required', 'array'], //'tags' => 'required|array'와 같음
+            'content' => ['required', 'min:1'],
             'files' => ['array'],
             //확장자 jpg,png,zip,tar만 가능 30000KB가 최대   P.280
             'files.*' => ['sometimes', "mimes:{$mimes}", 'max:30000'],
@@ -48,6 +48,7 @@ class ArticlesRequest extends FormRequest
             'array' => '배열만 허용합니다.',
             'mimes' => ':values 형식만 허용합니다.',
             'max' => ':max 킬로바이트까지만 허용합니다.',
+
         ];
     }
     /**

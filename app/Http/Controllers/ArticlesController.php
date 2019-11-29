@@ -11,37 +11,16 @@ class ArticlesController extends Controller
     public function __construct()
     {
         //로그인 하지 않아도 index(게시판 홈), show(게시판 뷰)는 볼 수 있음
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'show', ]]);
     }
 
     //메인 게시판
     public function index($slug = null)
     {
-        //현재 실행중인 METHOD가 무엇인지.
-        // return __METHOD__ . '조회 기능';
-
-        //(1)
-        // $articles = \App\Article::get();    #Article모델정보를 다 가져옴
-
-        //(2)
-        //Article모델의 user함수를 얻음  = with로 eager 로딩
-        // $articles = \App\Article::with('user')->get(); //=> with후 get
-
-        //(3)
-        //Article모델의 user함수를 얻음 = load로 razy 로딩
-        // $articles = \App\Article::get()->load('user');  //=> get후 load
-
-        // //(4)                  latest()는 날짜를 기준으로 정렬 (페이지당 20개)
-        // $articles = \App\Article::with('user')->latest()->paginate(20);
 
         //$slug는 태그로 검색할 경우에만 존재함
         $query = $slug ? \App\Tag::whereSlug($slug)->firstOrFail()->articles() : new \App\Article;
         $articles = $query->latest()->paginate(10);
-
-
-        //render은 view가 만든 html코드가 쫙 나옴 p.142
-        //dd(view('articles.index', compact('articles'))->render());
-        //dd(\App\Article::with('user')->latest()->toSql());
 
         return view('articles.index', compact('articles'));
         //compact()는 배열을 만들어줌.
@@ -60,26 +39,44 @@ class ArticlesController extends Controller
     //게시판 작성 완료
     //ArticlesRequest안에 제목, 내용에 대한 rule이 있음
     public function store(\App\Http\Requests\ArticlesRequest $request)
-    {
+    {   
         //작성을 요청한 유저의 게시판을 만듬(작성을 요청한 정보의 모든 속성을 $article에 대입)
         $article = $request->user()->articles()->create($request->all());
 
         //$article는 auth()->user()->articles()->create()를 호출함
         //==> 로그인한 유저의 게시판을 작성
         if (!$article) {
-            return back()->wtih('flash_message', '글 작성 실패')->wtihInput();
+            flash()->error('글 작성 실패');
+            return back()->withInput();
+        }
+        $article->tags()->sync($request->input('tags'));
+        print("c");
+        if ($request->hasFile('files')) {
+           // 파일 저장
+           $files = $request->file('files');
+
+           foreach($files as $file) {
+               $filename = Str::random().filter_var($file->getClientOriginalName(), FILTER_SANITIZE_URL);
+
+               // 순서 중요 !!!
+               // 파일이 PHP의 임시 저장소에 있을 때만 getSize, getClientMimeType등이 동작하므로,
+               // 우리 프로젝트의 파일 저장소로 업로드를 옮기기 전에 필요한 값을 취해야 함.
+               $article->attachments()->create([
+                   'filename' => $filename,
+                   'bytes' => $file->getSize(),
+                   'mime' => $file->getClientMimeType()
+               ]);
+
+               $file->move(attachments_path(), $filename);
+           }
         }
 
-        //이벤트를 발생시킴 
+        
         event(new \App\Events\ArticleCreated($article));
-
-        $article->update($request->all());
-        //입력한 태그를 요청하여 넣음?
-        $article->tags()->sync($request->input('tags'));
-
-
         flash()->success('게시판을 생성하였습니다.');
+        //이벤트를 발생시킴 
         // var_dump('이벤트 발생완료');
+
         return redirect(route('articles.index'))
             ->with('flash_message', '글작성 성공!');
     }
@@ -120,7 +117,8 @@ class ArticlesController extends Controller
 
     //게시판 삭제, 완료
     public function destroy(\App\Article $article)
-    {
+    {   
+        $this->authorize('delete', $article);
         flash()->success('게시판 삭제를 완료했습니다.');
         $article->delete();
         return response()->json([], 204);
